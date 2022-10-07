@@ -40,7 +40,7 @@
 <script src="/template/admin/dist/js/pages/dashboard.js"></script>
 <script src="/template/admin/js/main.js"></script>
 <script>
-    function Del(name) {
-        return confirm("Do you want to delete: " + name + " ?");
+    function Confirm() {
+        return confirm("Are you sure ?");
     }
 </script>

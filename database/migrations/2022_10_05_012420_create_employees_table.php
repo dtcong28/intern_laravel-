@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('m_employees', function (Blueprint $table) {
+        Schema::create('employees', function (Blueprint $table) {
             $table->increments('id')->nullable(false);
             $table->unsignedInteger('team_id')->nullable(false);
             $table->string('email', 128)->nullable(false);
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->dateTime('upd_datetime')->nullable();
             $table->char('del_flag',1)->nullable(false)->default(0);
 
-            $table->foreign('team_id')->references('id')->on('m_teams')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -45,6 +45,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_employees');
+        Schema::dropIfExists('employees');
     }
 };

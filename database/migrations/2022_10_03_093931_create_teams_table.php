@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('m_teams', function (Blueprint $table) {
+        Schema::create('teams', function (Blueprint $table) {
             $table->increments('id')->nullable(false);
             $table->string('name', 128)->nullable(false);
             $table->integer('ins_id')->nullable(false);
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_teams');
+        Schema::dropIfExists('teams');
     }
 };

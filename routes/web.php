@@ -28,8 +28,8 @@ Route::group(['prefix' => 'management'], function () {
     Auth::routes();
 
     Route::group(['prefix' => 'team'], function () {
-        Route::post('create_confirm', [TeamController::class, 'create_confirm'])->name('team_confirm');
-
+        Route::post('create_confirm', [TeamController::class, 'create_confirm'])->name('team_create_confirm');
+        Route::post('edit_confirm', [TeamController::class, 'edit_confirm'])->name('team_edit_confirm');
     });
 
     // Team
