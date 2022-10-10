@@ -19,6 +19,11 @@
                     {{ session()->get('success') }}
                 </div>
             @endif
+                @if (session()->has('warning'))
+                    <div class="alert alert-warning text-center">
+                        {{ session()->get('warning') }}
+                    </div>
+                @endif
             @yield('content')
         </section>
         <!-- /.content -->
@@ -27,3 +32,4 @@
     @include('layout.footer')
 </div>
 </body>
+

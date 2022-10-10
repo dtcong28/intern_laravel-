@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Repository\TeamRepositoryInterface;
 use App\Repository\Eloquent\TeamRepository;
+use App\Repository\Eloquent\EmployeeRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -16,7 +16,8 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(TeamRepositoryInterface::class, TeamRepository::class);
+        $this->app->bind( TeamRepository::class);
+        $this->app->bind( EmployeeRepository::class);
     }
 
     /**

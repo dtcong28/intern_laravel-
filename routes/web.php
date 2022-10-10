@@ -27,13 +27,21 @@ Route::group(['prefix' => 'management'], function () {
     // Authentication
     Auth::routes();
 
+    // Team
     Route::group(['prefix' => 'team'], function () {
         Route::post('create_confirm', [TeamController::class, 'create_confirm'])->name('team_create_confirm');
         Route::post('edit_confirm', [TeamController::class, 'edit_confirm'])->name('team_edit_confirm');
     });
 
-    // Team
     Route::resource('team', TeamController::class);
+
+    // Employee
+    Route::group(['prefix' => 'employee'], function () {
+        Route::post('create_confirm', [EmployeeController::class, 'create_confirm'])->name('employee_create_confirm');
+        Route::post('edit_confirm', [EmployeeController::class, 'edit_confirm'])->name('employee_edit_confirm');
+    });
+
+    Route::resource('employee', EmployeeController::class);
 
 });
 

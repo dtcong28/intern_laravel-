@@ -1,5 +1,5 @@
 @extends('main')
-@if(empty($id))
+@if(!session()->has('team.id'))
     @section('title', 'Create confirm')
 @else
     @section('title', 'Edit confirm')
@@ -9,7 +9,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    @if(empty($id))
+                    @if(!session()->has('team.id'))
                         <h1 class="m-0">Create Confirm</h1>
                     @else
                         <h1 class="m-0">Edit Confirm</h1>
@@ -19,15 +19,20 @@
         </div>
     </div>
     <div class="container-fluid">
-        <form method="POST" action="@if(!empty($id)) {{route("team.update",$id)}} @else {{route("team.store")}} @endif"
+        <form method="POST"
+              action="@if(session()->has('team.id')) {{route("team.update",session()->get('team.id'))}} @else {{route("team.store")}} @endif"
               class="col">
-            @if(!empty($id))
+            @if(session()->has('team.id'))
                 @method('PATCH')
             @endif
             @csrf
             <div class="form-group p-5 border border-secondary row">
+                @if(session()->has('team.id'))
+                    <label>ID</label>
+                    <span>{{session()->get('team.id')}}</span>
+                @endif
                 <label>Name</label>
-                <input name="name" type="text" class="form-control col-4" value="{{$name}}" readonly>
+                <span>{{session()->get('team.name')}}</span>
             </div>
             <div class="row">
                 <a href="javascript:window.history.back();" class="btn btn-secondary col-1">Back</a>

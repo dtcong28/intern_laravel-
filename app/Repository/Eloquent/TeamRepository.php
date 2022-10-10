@@ -4,7 +4,6 @@
 namespace App\Repository\Eloquent;
 
 use App\Models\Team;
-use App\Repository\TeamRepositoryInterface;
 
 class TeamRepository extends BaseRepository
 {

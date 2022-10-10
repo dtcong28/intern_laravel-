@@ -30,40 +30,44 @@ class TeamController extends Controller
         return view("team.form");
     }
 
-    public function create_confirm()
+    public function create_confirm(TeamRequest $request)
     {
-        return view("team.form_confirm",['name' => $_POST["name"]]);
+        $data = $request->all();
+        $request->session()->put('team', $data);
+        return view("team.form_confirm");
     }
 
     public function store(TeamRequest $request)
     {
-        $this->teamRepository->save($request->all());
-        return redirect()->route('team.index')->with('success', 'Successfully added new');
+        $this->teamRepository->save(session()->pull('team'));
+        return redirect()->route('team.index')->with('success', config('constants.messages.CREATE_SUCCESS'));
     }
 
     public function edit($id)
     {
         if (!$team = $this->teamRepository->findById($id)) {
-            abort(404);
+            return redirect()->route('team.index')->with('warning', config('constants.messages.NO_DATA'));
         }
         return view('team.form', ['team' => $team]);
     }
 
-    public function edit_confirm()
+    public function edit_confirm(TeamRequest $request)
     {
-        return view("team.form_confirm",['name' => $_POST["name"], 'id' => $_POST["id"]]);
+        $data = $request->all();
+        $request->session()->put('team', $data);
+        return view("team.form_confirm");
     }
 
     public function update(TeamRequest $request, $id)
     {
-        $this->teamRepository->save($request->all(), ['id' => $id]);
-        return redirect()->route('team.index')->with('success', 'Successfully updated');
+        $this->teamRepository->save(session()->pull('team'), ['id' => $id]);
+        return redirect()->route('team.index')->with('success',  config('constants.messages.UPDATE_SUCCESS'));
     }
 
     public function destroy($id)
     {
         $this->teamRepository->deleteById($id);
-        return redirect()->route('team.index')->with('success', 'Delete success.');
+        return redirect()->route('team.index')->with('success', config('constants.messages.DELETE_SUCCESS'));
     }
 
     public function show($id)

@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('email', 128)->nullable(false);
             $table->string('first_name', 128)->nullable(false);
             $table->string('last_name', 128)->nullable(false);
-            $table->string('password', 64)->nullable(false);
             $table->char('gender',1)->nullable(false);
             $table->date('birthday')->nullable(false);
             $table->string('address', 256)->nullable(false);
