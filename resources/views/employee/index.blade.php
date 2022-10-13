@@ -14,9 +14,24 @@
     <div class="container-fluid">
         <div class="border border-primary">
             <form method="GET" class="p-4">
-                <div class="form-group pb-3 col-6">
+                <div class="form-group col-5">
+                    <label>Team *</label><br>
+                    <select class="form-select col-6" name="team_id">
+                        @if(!empty($teams))
+                            <option value="">Open this to select team</option>
+                        @endif
+                        @foreach($teams as $team)
+                            <option value="{{$team->id}}">{{$team->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-5">
                     <label>Name *</label>
                     <input type="text" class="form-control" name="searchName">
+                </div>
+                <div class="form-group col-5">
+                    <label>Email *</label>
+                    <input type="text" class="form-control" name="searchEmail">
                 </div>
                 <div class="row">
                     <button type="reset" class="btn btn-secondary col-1">Reset</button>
@@ -31,14 +46,19 @@
 
         <thead class="thead-dark">
         <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Team</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
+            <th scope="col">@sortablelink('id', 'ID')</th>
+            <th scope="col">@sortablelink('team_id', 'Team')</th>
+            <th scope="col">@sortablelink('last_name', 'Name')</th>
+            <th scope="col">@sortablelink('email', 'Email')</th>
             <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
+        @if ($employees->count() == 0)
+            <tr>
+                <td colspan="5">No result found.</td>
+            </tr>
+        @endif
         @if(!empty($employees))
             @foreach ($employees as $employee)
                 <tr>

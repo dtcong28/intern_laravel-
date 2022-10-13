@@ -5,13 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Scopes\DelFlagScope;
+use Kyslik\ColumnSortable\Sortable;
 
 class Employee extends Model
 {
     use HasFactory;
+    use Sortable;
 
     public $timestamps = false;
     protected $appends = ['full_name'];
+
+    public $sortable = ['id', 'team_id', 'full_name', 'email'];
 
     protected $fillable = [
         'id',
@@ -34,13 +38,14 @@ class Employee extends Model
         'del_flag'
     ];
 
-    public function team() {
+    public function team()
+    {
         return $this->belongsTo(Team::class);
     }
 
     public function getFullNameAttribute()
     {
-        return $this->first_name. ' ' . $this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     protected static function boot()

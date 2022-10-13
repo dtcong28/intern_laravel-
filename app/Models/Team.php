@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Scopes\DelFlagScope;
+use Kyslik\ColumnSortable\Sortable;
 
 class Team extends Model
 {
     use HasFactory;
+    use Sortable;
 
     public $timestamps = false;
 
@@ -20,6 +22,8 @@ class Team extends Model
         'upd_datetime',
         'del_flag'
     ];
+
+    public $sortable = ['id', 'name'];
 
     public function employees() {
         return $this->hasMany(Employee::class);

@@ -85,9 +85,9 @@
                     </div>
                     <div class="form-group">
                         <label>Type of work *</label><br>
-                        <span>@if(session()->get('employee.type_work') == config('constants.typeWork.FULLTIME'))
-                                Fulltime @elseif(session()->get('employee.type_work') == config('constants.typeWork.PARTIME'))
-                                Partime @elseif(session()->get('employee.type_work') == config('constants.typeWork.PROBATIONARY_STAFF'))
+                        <span>@if(session()->get('employee.type_of_work') == config('constants.typeWork.FULLTIME'))
+                                Fulltime @elseif(session()->get('employee.type_of_work') == config('constants.typeWork.PARTIME'))
+                                Partime @elseif(session()->get('employee.type_of_work') == config('constants.typeWork.PROBATIONARY_STAFF'))
                                 Probationay staff @else Intern @endif</span>
                     </div>
                     <div class="form-group">

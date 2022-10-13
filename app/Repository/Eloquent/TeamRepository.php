@@ -11,4 +11,13 @@ class TeamRepository extends BaseRepository
     {
         $this->model = $model;
     }
+
+    public function findByName($name)
+    {
+
+        if (empty($name)) {
+            return $this->model->sortable()->paginate(config('constants.pagination.PER_PAGE'));
+        }
+        return $this->model->sortable()->where('name', 'like', '%' . $name . '%')->paginate(config('constants.pagination.PER_PAGE'));
+    }
 }
