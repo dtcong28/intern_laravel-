@@ -21,28 +21,33 @@
                             <option value="">Open this to select team</option>
                         @endif
                         @foreach($teams as $team)
-                            <option value="{{$team->id}}">{{$team->name}}</option>
+                            <option value="{{$team->id}}" {{ $team->id == request()->get('team_id') ? 'selected' : '' }} >{{$team->name}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group col-5">
                     <label>Name *</label>
-                    <input type="text" class="form-control" name="searchName">
+                    <input type="text" class="form-control" name="searchName" value="{{ request()->get('searchName','') }}">
                 </div>
                 <div class="form-group col-5">
                     <label>Email *</label>
-                    <input type="text" class="form-control" name="searchEmail">
+                    <input type="text" class="form-control" name="searchEmail" value="{{ request()->get('searchEmail','') }}">
                 </div>
                 <div class="row">
-                    <button type="reset" class="btn btn-secondary col-1">Reset</button>
+                    <a href="{{route('employee.index')}}" class="btn btn-secondary col-1">Reset</a>
                     <div class="col-10"></div>
                     <button type="search" class="btn btn-primary col-1">Search</button>
                 </div>
             </form>
         </div>
+
+    </div>
+    <div class="row pt-2">
+        <div class="col-9"></div>
+        <button type="submit" class="btn btn-primary col-2">Export CSV</button>
     </div>
 
-    <table class="table mt-5">
+    <table class="table mt-3">
 
         <thead class="thead-dark">
         <tr>
@@ -62,10 +67,10 @@
         @if(!empty($employees))
             @foreach ($employees as $employee)
                 <tr>
-                    <th scope="row">{{ $employee['id'] }}</th>
-                    <td>@foreach($teams as $team)@if($employee['team_id'] == $team->id){{$team->name}}@endif @endforeach</td>
-                    <td>{{ $employee['full_name'] }}</td>
-                    <td>{{ $employee['email'] }}</td>
+                    <th scope="row">{{ $employee->id }}</th>
+                    <td>{{ $employee->team->name }}</td>
+                    <td>{{ $employee->full_name }}</td>
+                    <td>{{ $employee->email }}</td>
                     <td>
                         <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-primary btn-sm">Edit</a>
                         <form class="d-inline" method="post" action="{{route('employee.destroy', $employee->id)}}">
@@ -80,7 +85,7 @@
         </tbody>
     </table>
     @if(!empty($employees))
-    {{ $employees->links() }}
+    {{ $employees->links('layout.paginationlinks') }}
     @endif
     </div>
 @endsection

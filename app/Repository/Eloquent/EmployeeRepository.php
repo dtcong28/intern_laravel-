@@ -13,30 +13,19 @@ class EmployeeRepository extends BaseRepository
         $this->model = $model;
     }
 
-    public function findByTeamOrNameOrEmail($team,$name,$email)
+    public function findByTeamOrNameOrEmail($team, $name, $email)
     {
-        if(!empty($team) && empty($name) && empty($email)) {
+        $query = $this->model->with('team')->sortable();
 
-            return $this->model->sortable()->where('team_id', '=', $team)->paginate(config('constants.pagination.PER_PAGE'));
-
-        }elseif (empty($team) && !empty($name) && empty($email)) {
-
-            return $this->model->sortable()->Where(DB::raw("CONCAT(first_name,' ',last_name)"), 'like', '%'.$name.'%')->paginate(config('constants.pagination.PER_PAGE'));
-
-        }elseif (empty($team) && empty($name) && !empty($email)) {
-
-            return $this->model->sortable()->where('email', 'like', '%'.$email.'%')->paginate(config('constants.pagination.PER_PAGE'));
-
-        }elseif (!empty($team) && !empty($name) && !empty($email)) {
-
-            return $this->model->sortable()->where('team_id', '=', $team)
-                                           ->where(DB::raw("CONCAT(first_name,' ',last_name)"), 'like', '%'.$name.'%')
-                                           ->where('email', 'like', '%'.$email.'%')
-                                           ->paginate(config('constants.pagination.PER_PAGE'));
-        }else {
-
-            return $this->model->sortable()->paginate(config('constants.pagination.PER_PAGE'));
+        if (!empty($team)) {
+            $query = $query->where('team_id', '=', $team);
         }
-
+        if (!empty($name)) {
+            $query = $query->where(DB::raw("CONCAT(first_name,' ',last_name)"), 'like', '%' . $name . '%');
+        }
+        if (!empty($email)) {
+            $query = $query->where('email', 'like', '%' . $email . '%');
+        }
+        return $query->paginate(config('constants.pagination.PER_PAGE'));
     }
 }

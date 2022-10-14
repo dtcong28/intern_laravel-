@@ -15,7 +15,7 @@ class Employee extends Model
     public $timestamps = false;
     protected $appends = ['full_name'];
 
-    public $sortable = ['id', 'team_id', 'full_name', 'email'];
+    public $sortable = ['id', 'team_id', 'last_name', 'email'];
 
     protected $fillable = [
         'id',

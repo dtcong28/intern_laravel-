@@ -11,6 +11,7 @@ use App\Http\Requests\Team\TeamRequest;
 use Illuminate\Support\Collection;
 
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Support\Facades\Log;
 
 
 class TeamController extends Controller
@@ -24,7 +25,7 @@ class TeamController extends Controller
 
     public function index(TeamRequest $request)
     {
-        $searchName = isset($_GET['searchName']) ? $_GET['searchName'] : '';
+        $searchName = $request->get('searchName');
         $result = $this->teamRepository->findByName(trim($searchName));
         $result->appends($request->all());
         return view('team.index', [
@@ -37,7 +38,7 @@ class TeamController extends Controller
         return view("team.form");
     }
 
-    public function create_confirm(TeamRequest $request)
+    public function createConfirm(TeamRequest $request)
     {
         $data = $request->all();
         $request->session()->put('team', $data);
@@ -51,6 +52,7 @@ class TeamController extends Controller
             $this->teamRepository->save($team);
             return redirect()->route('team.index')->with('success', config('constants.messages.CREATE_SUCCESS'));
         } catch (\Exception $e) {
+            Log::error($e);
             return redirect()->route('team.index')->with('fail', config('constants.messages.CREATE_FAIL'));
         }
     }
@@ -64,12 +66,13 @@ class TeamController extends Controller
             }
             return view('team.form', ['team' => $team]);
         } catch (\Exception $e) {
+            Log::error($e);
             return redirect()->route('team.index')->with('fail', config('constants.messages.EDIT_FAIL'));
         }
 
     }
 
-    public function edit_confirm(TeamRequest $request)
+    public function editConfirm(TeamRequest $request)
     {
         $data = $request->all();
         $request->session()->put('team', $data);
@@ -89,6 +92,7 @@ class TeamController extends Controller
             $this->teamRepository->save($team, ['id' => $id]);
             return redirect()->route('team.index')->with('success', config('constants.messages.UPDATE_SUCCESS'));
         } catch (\Exception $e) {
+            Log::error($e);
             return redirect()->route('team.index')->with('fail', config('constants.messages.UPDATE_FAIL'));
         }
 
@@ -105,6 +109,7 @@ class TeamController extends Controller
             $this->teamRepository->deleteById($id);
             return redirect()->route('team.index')->with('success', config('constants.messages.DELETE_SUCCESS'));
         } catch (\Exception $e){
+            Log::error($e);
             return redirect()->route('team.index')->with('fail', config('constants.messages.DELETE_FAIL'));
         }
     }

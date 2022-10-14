@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Repository\Eloquent\EmployeeRepository;
 use App\Repository\Eloquent\TeamRepository;
 use App\Http\Requests\Employee\EmployeeRequest;
+use Illuminate\Support\Facades\Log;
 
 
 class EmployeeController extends Controller
@@ -25,10 +26,11 @@ class EmployeeController extends Controller
     {
         $listTeam = $this->teamRepository->getAll();
 
-        $teamId = isset($_GET['team_id']) ? trim($_GET['team_id']) : '';
-        $searchName = isset($_GET['searchName']) ? trim($_GET['searchName']) : '';
-        $searchEmail = isset($_GET['searchEmail']) ? trim($_GET['searchEmail']) : '';
+        $teamId = $request->get('team_id');
+        $searchName = $request->get('searchName');
+        $searchEmail = $request->get('searchEmail');
 
+        // Xử lý N+1 trong findByTeamOrNameOrEmail
         $result = $this->employeeRepository->findByTeamOrNameOrEmail($teamId, $searchName, $searchEmail);
         $result->appends($request->all());
 
@@ -43,7 +45,7 @@ class EmployeeController extends Controller
         return view("employee.form", ['teams' => $this->teamRepository->getAll()]);
     }
 
-    public function create_confirm(EmployeeRequest $request)
+    public function createConfirm(EmployeeRequest $request)
     {
         uploadImg($request);
         $data = $request->except('upload_file');
@@ -63,6 +65,7 @@ class EmployeeController extends Controller
 
             return redirect()->route('employee.index')->with('success', config('constants.messages.CREATE_SUCCESS'));
         } catch (\Exception $e) {
+            Log::error($e);
             return redirect()->route('employee.index')->with('fail', config('constants.messages.CREATE_FAIL'));
         }
     }
@@ -78,12 +81,13 @@ class EmployeeController extends Controller
             }
             return view('employee.form', ['employee' => $employee, 'teams' => $teams]);
         } catch (\Exception $e) {
+            Log::error($e);
             return redirect()->route('employee.index')->with('fail', config('constants.messages.EDIT_FAIL'));
         }
 
     }
 
-    public function edit_confirm(EmployeeRequest $request)
+    public function editConfirm(EmployeeRequest $request)
     {
         uploadImg($request);
         $data = $request->except('upload_file');
@@ -106,6 +110,7 @@ class EmployeeController extends Controller
             $this->employeeRepository->save($employee, ['id' => $id]);
             return redirect()->route('employee.index')->with('success', config('constants.messages.UPDATE_SUCCESS'));
         } catch (\Exception $e) {
+            Log::error($e);
             return redirect()->route('employee.index')->with('fail', config('constants.messages.UPDATE_FAIL'));
         }
     }
@@ -122,6 +127,7 @@ class EmployeeController extends Controller
             $this->employeeRepository->deleteById($id);
             return redirect()->route('employee.index')->with('success', config('constants.messages.DELETE_SUCCESS'));
         } catch (\Exception $e) {
+            Log::error($e);
             return redirect()->route('employee.index')->with('fail', config('constants.messages.DELETE_FAIL'));
         }
     }

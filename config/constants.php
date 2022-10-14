@@ -42,7 +42,7 @@ return [
         'RETIRED' => 2,
     ],
 
-    'pagination '=>[
+    'pagination' => [
         'PER_PAGE' => 3,
     ]
 ];

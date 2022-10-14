@@ -14,7 +14,6 @@ class TeamRepository extends BaseRepository
 
     public function findByName($name)
     {
-
         if (empty($name)) {
             return $this->model->sortable()->paginate(config('constants.pagination.PER_PAGE'));
         }

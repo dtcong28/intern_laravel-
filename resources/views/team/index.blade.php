@@ -19,7 +19,7 @@
                            value="{{ request()->get('searchName','') }}">
                 </div>
                 <div class="row">
-                    <button type="reset" class="btn btn-secondary col-1">Reset</button>
+                    <a href="{{ route('team.index')}}" class="btn btn-secondary col-1">Reset</a>
                     <div class="col-10"></div>
                     <button type="search" class="btn btn-primary col-1">Search</button>
                 </div>
