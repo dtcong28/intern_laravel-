@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EmployeeExport;
 use App\Jobs\SendWelcomeEmail;
 use Illuminate\Http\Request;
 use App\Models\Employee;
@@ -9,6 +10,7 @@ use App\Repository\Eloquent\EmployeeRepository;
 use App\Repository\Eloquent\TeamRepository;
 use App\Http\Requests\Employee\EmployeeRequest;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class EmployeeController extends Controller
@@ -131,4 +133,12 @@ class EmployeeController extends Controller
             return redirect()->route('employee.index')->with('fail', config('constants.messages.DELETE_FAIL'));
         }
     }
+
+    public function exportFile() {
+        return Excel::download(new EmployeeExport, 'employee-csv.csv');
+    }
+
+//    public function show() {
+//
+//    }
 }

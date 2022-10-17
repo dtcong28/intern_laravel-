@@ -44,7 +44,7 @@
     </div>
     <div class="row pt-2">
         <div class="col-9"></div>
-        <button type="submit" class="btn btn-primary col-2">Export CSV</button>
+        <a class="btn btn-primary col-2" href="{{ route('employee.export_file') }}">Export CSV</a>
     </div>
 
     <table class="table mt-3">

@@ -38,8 +38,11 @@ Route::group(['prefix' => 'management'], function () {
     Route::group(['prefix' => 'employee'], function () {
         Route::post('create_confirm', [EmployeeController::class, 'createConfirm'])->name('employee_create_confirm');
         Route::post('edit_confirm', [EmployeeController::class, 'editConfirm'])->name('employee_edit_confirm');
+
+        Route::get('export_file/csv', [EmployeeController::class, 'exportFile'])->name('employee.export_file');
     });
     Route::resource('employee', EmployeeController::class);
+
 
 });
 
