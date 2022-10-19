@@ -13,7 +13,7 @@ class EmployeeRepository extends BaseRepository
         $this->model = $model;
     }
 
-    public function findByTeamOrNameOrEmail($team, $name, $email)
+    public function findByTeamOrNameOrEmail(array $column,$team, $name, $email, $paginate = 1)
     {
         $query = $this->model->with('team')->sortable();
 
@@ -26,6 +26,10 @@ class EmployeeRepository extends BaseRepository
         if (!empty($email)) {
             $query = $query->where('email', 'like', '%' . $email . '%');
         }
-        return $query->paginate(config('constants.pagination.PER_PAGE'));
+
+        if ($paginate == 1) {
+            return $query->select($column)->paginate(config('constants.pagination.PER_PAGE'));
+        }
+        return $query->select($column)->get();
     }
 }

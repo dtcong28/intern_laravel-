@@ -23,7 +23,7 @@ class TeamController extends Controller
         $this->teamRepository = $teamRepository;
     }
 
-    public function index(TeamRequest $request)
+    public function index(Request $request)
     {
         $searchName = $request->get('searchName');
         $result = $this->teamRepository->findByName(trim($searchName));
@@ -45,7 +45,7 @@ class TeamController extends Controller
         return view("team.form_confirm");
     }
 
-    public function store(TeamRequest $request)
+    public function store()
     {
         try {
             $team = session()->pull('team');
@@ -79,7 +79,7 @@ class TeamController extends Controller
         return view("team.form_confirm");
     }
 
-    public function update(TeamRequest $request, $id)
+    public function update($id)
     {
         try {
             $team = session()->pull('team');

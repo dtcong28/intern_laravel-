@@ -10,7 +10,6 @@
             </div>
         </div>
     </div>
-
     <div class="container-fluid">
         <div class="border border-primary">
             <form method="GET" class="p-4">

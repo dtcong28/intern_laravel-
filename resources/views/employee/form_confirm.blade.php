@@ -18,6 +18,8 @@
             </div>
         </div>
     </div>
+    {{ var_dump(session()->get('employee') )}}
+
     <div class="container-fluid">
         <form method="POST"
               action="@if(session()->has('employee.id')) {{route("employee.update",session()->get('employee.id'))}} @else {{route("employee.store")}} @endif"

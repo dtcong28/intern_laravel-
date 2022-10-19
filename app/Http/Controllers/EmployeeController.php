@@ -24,7 +24,7 @@ class EmployeeController extends Controller
         $this->employeeRepository = $employeeRepository;
     }
 
-    public function index(EmployeeRequest $request)
+    public function index(Request $request)
     {
         $listTeam = $this->teamRepository->getAll();
 
@@ -32,8 +32,14 @@ class EmployeeController extends Controller
         $searchName = $request->get('searchName');
         $searchEmail = $request->get('searchEmail');
 
+        // data export
+        $column = ['id','first_name','last_name','email', 'address'];
+        $dataExport = $this->employeeRepository->findByTeamOrNameOrEmail($column,$teamId, $searchName, $searchEmail,0);
+        session()->put('exportFile', $dataExport);
+
         // Xử lý N+1 trong findByTeamOrNameOrEmail
-        $result = $this->employeeRepository->findByTeamOrNameOrEmail($teamId, $searchName, $searchEmail);
+        $column = ['id','team_id','first_name','last_name','email'];
+        $result = $this->employeeRepository->findByTeamOrNameOrEmail($column,$teamId, $searchName, $searchEmail);
         $result->appends($request->all());
 
         return view('employee.index', [
@@ -57,7 +63,7 @@ class EmployeeController extends Controller
         return view("employee.form_confirm", ['teams' => $teams]);
     }
 
-    public function store(EmployeeRequest $request)
+    public function store()
     {
         try {
             $employee = session()->pull('employee');
@@ -99,7 +105,7 @@ class EmployeeController extends Controller
         return view("employee.form_confirm", ['teams' => $teams]);
     }
 
-    public function update(EmployeeRequest $request, $id)
+    public function update($id)
     {
         try {
             $employee = session()->pull('employee');
@@ -135,10 +141,7 @@ class EmployeeController extends Controller
     }
 
     public function exportFile() {
-        return Excel::download(new EmployeeExport, 'employee-csv.csv');
+        return Excel::download(new EmployeeExport(session()->pull('exportFile')), 'employee-csv.csv');
     }
 
-//    public function show() {
-//
-//    }
 }
