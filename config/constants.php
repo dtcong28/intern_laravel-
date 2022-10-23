@@ -10,7 +10,9 @@ return [
         'UPDATE_FAIL' => 'Update failure',
         'DELETE_FAIL' => 'Delete failure',
 
-        'NO_DATA' => 'Data does not exist'
+        'NO_DATA' => 'Data does not exist',
+
+        'LOGIN_FAIL' => 'Login fail'
     ],
 
     'path' => [

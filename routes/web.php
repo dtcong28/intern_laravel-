@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
-
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,25 +26,28 @@ Route::get('/', function () {
 // Admin
 Route::group(['prefix' => 'management'], function () {
     // Authentication
-    Auth::routes();
+    // Login
+    Route::get('/login', [AuthController::class, 'login'])->name('admin.login');
+    Route::post('/post_login', [AuthController::class, 'postLogin'])->name('admin.post_login');
+
+    // Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
     // Team
-    Route::group(['prefix' => 'team'], function () {
+    Route::group(['prefix' => 'team','middleware' => ['auth.checklogin']], function () {
         Route::post('create_confirm', [TeamController::class, 'createConfirm'])->name('team_create_confirm');
         Route::post('edit_confirm', [TeamController::class, 'editConfirm'])->name('team_edit_confirm');
     });
-    Route::resource('team', TeamController::class);
+    Route::resource('team', TeamController::class)->middleware('auth.checklogin');
 
     // Employee
-    Route::group(['prefix' => 'employee'], function () {
+    Route::group(['prefix' => 'employee','middleware' => ['auth.checklogin']], function () {
         Route::post('create_confirm', [EmployeeController::class, 'createConfirm'])->name('employee_create_confirm');
         Route::post('edit_confirm', [EmployeeController::class, 'editConfirm'])->name('employee_edit_confirm');
 
         Route::get('export_file/csv', [EmployeeController::class, 'exportFile'])->name('employee.export_file');
     });
-    Route::resource('employee', EmployeeController::class);
-
-
+    Route::resource('employee', EmployeeController::class)->middleware('auth.checklogin');
 });
 
 

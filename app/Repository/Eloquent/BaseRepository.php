@@ -3,25 +3,25 @@
 namespace App\Repository\Eloquent;
 
 use App\Repository\BaseRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class BaseRepository implements BaseRepositoryInterface
 {
     protected $model;
 
-//    public function paginate(array $input = [], $perPage = 5)
-//    {
-//        $query = $this->model->query();
-//        return $query->paginate($perPage);
-//    }
-
     public function save(array $inputs, array $conditions = ['id' => null])
     {
         $inputs = array_merge($inputs, [
-            'ins_id' => 1,
+            'ins_id' => Auth::user()->id,
             'upd_id' => NULL,
             'upd_datetime' => date('Y-m-d H:i:s'),
             'ins_datetime' => date('Y-m-d H:i:s')
         ]);
+
+        if($conditions['id'] != NULL) {
+            $inputs['upd_id'] = Auth::user()->id;
+        }
+
         return $this->model->updateOrCreate($conditions, $inputs);
     }
 
@@ -33,6 +33,11 @@ class BaseRepository implements BaseRepositoryInterface
     public function deleteById($id)
     {
         return $this->model->updateOrCreate(['id' => $id], ['del_flag' => 1]);
+    }
+
+    public function delete(array $conditions = [])
+    {
+        return $this->model->where($conditions)->update(['del_flag' => 1]);
     }
 
     public function getAll(array $input = [])

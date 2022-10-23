@@ -15,7 +15,7 @@
             <form method="GET" class="p-4">
                 <div class="form-group col-5">
                     <label>Team *</label><br>
-                    <select class="form-select col-6" name="team_id">
+                    <select class="form-select col-7" name="team_id">
                         @if(!empty($teams))
                             <option value="">Open this to select team</option>
                         @endif
@@ -50,10 +50,10 @@
 
         <thead class="thead-dark">
         <tr>
-            <th scope="col">@sortablelink('id', 'ID')</th>
-            <th scope="col">@sortablelink('team_id', 'Team')</th>
-            <th scope="col">@sortablelink('last_name', 'Name')</th>
-            <th scope="col">@sortablelink('email', 'Email')</th>
+            <th scope="col">@if ($employees->count() == 0) ID @else @sortablelink('id', 'ID') @endif</th>
+            <th scope="col">@if ($employees->count() == 0) Team @else @sortablelink('team_id', 'Team') @endif</th>
+            <th scope="col">@if ($employees->count() == 0) Name @else @sortablelink('last_name', 'Name') @endif</th>
+            <th scope="col">@if ($employees->count() == 0) Email @else @sortablelink('email', 'Email') @endif</th>
             <th scope="col">Action</th>
         </tr>
         </thead>
@@ -75,7 +75,32 @@
                         <form class="d-inline" method="post" action="{{route('employee.destroy', $employee->id)}}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return Confirm()">Delete</button>
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-default">
+                                Delete
+                            </button>
+                            <div class="modal fade" id="modal-default">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Confirm</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure ?</p>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <form action="{{route('employee.destroy', $team->id)}}" method="POST" style="display: inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-primary">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </td>
                 </tr>

@@ -19,4 +19,5 @@ class TeamRepository extends BaseRepository
         }
         return $this->model->sortable()->where('name', 'like', '%' . $name . '%')->paginate(config('constants.pagination.PER_PAGE'));
     }
+
 }

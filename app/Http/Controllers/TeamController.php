@@ -7,6 +7,7 @@ use App\Models\Team;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use App\Repository\Eloquent\TeamRepository;
+use App\Repository\Eloquent\EmployeeRepository;
 use App\Http\Requests\Team\TeamRequest;
 use Illuminate\Support\Collection;
 
@@ -17,10 +18,12 @@ use Illuminate\Support\Facades\Log;
 class TeamController extends Controller
 {
     protected $teamRepository;
+    protected $employeeRepository;
 
-    public function __construct(TeamRepository $teamRepository)
+    public function __construct(TeamRepository $teamRepository, EmployeeRepository $employeeRepository)
     {
         $this->teamRepository = $teamRepository;
+        $this->employeeRepository = $employeeRepository;
     }
 
     public function index(Request $request)
@@ -40,6 +43,7 @@ class TeamController extends Controller
 
     public function createConfirm(TeamRequest $request)
     {
+        $request->flash();
         $data = $request->all();
         $request->session()->put('team', $data);
         return view("team.form_confirm");
@@ -74,6 +78,7 @@ class TeamController extends Controller
 
     public function editConfirm(TeamRequest $request)
     {
+        $request->flash();
         $data = $request->all();
         $request->session()->put('team', $data);
         return view("team.form_confirm");
@@ -100,6 +105,7 @@ class TeamController extends Controller
 
     public function destroy($id)
     {
+        DB::beginTransaction();
         try {
             $team_id = $this->teamRepository->findById($id);
             if (empty($team_id)) {
@@ -107,8 +113,12 @@ class TeamController extends Controller
             }
 
             $this->teamRepository->deleteById($id);
+            $this->employeeRepository->delete(['team_id' => $id]);
+
+            DB::commit();
             return redirect()->route('team.index')->with('success', config('constants.messages.DELETE_SUCCESS'));
         } catch (\Exception $e){
+            DB::rollback();
             Log::error($e);
             return redirect()->route('team.index')->with('fail', config('constants.messages.DELETE_FAIL'));
         }

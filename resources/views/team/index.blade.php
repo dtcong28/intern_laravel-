@@ -29,8 +29,8 @@
     <table class="table mt-5">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">@sortablelink('id', 'ID')</th>
-            <th scope="col">@sortablelink('name', 'Name')</th>
+            <th scope="col">@if ($teams->count() == 0) ID @else @sortablelink('id', 'ID')@endif</th>
+            <th scope="col">@if ($teams->count() == 0) Name @else @sortablelink('name', 'Name')@endif</th>
             <th scope="col">Action</th>
         </tr>
         </thead>
@@ -47,12 +47,32 @@
                     <td>{{ $team['name'] }}</td>
                     <td>
                         <a href="{{ route('team.edit', $team->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                        <form class="d-inline" method="post" action="{{route('team.destroy', $team->id)}}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return Confirm()">Delete
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-default">
+                            Delete
+                        </button>
+                        <div class="modal fade" id="modal-default">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Confirm</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure ?</p>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <form action="{{route('team.destroy', $team->id)}}" method="POST" style="display: inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-primary">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             @endforeach
@@ -66,4 +86,5 @@
         @endif
     </div>
     </div>
+
 @endsection

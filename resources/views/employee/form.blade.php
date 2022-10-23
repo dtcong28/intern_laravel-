@@ -12,18 +12,18 @@
                 <div class="col-sm-6">
                     @if(empty($employee))
                         <h1 class="m-0">Create Employee</h1>
-                        {{ var_dump(session()->get('employee.first_name') )}}
                     @else
                         <h1 class="m-0">Edit Employee</h1>
+                        {{session()->put('create_avatar',$employee->avatar)}}
                     @endif
                 </div>
             </div>
         </div>
     </div>
-    {{ var_dump(session()->get('create_avatar'))}}
-    {{ var_dump(session()->get('employee') )}}
+    @if(!session()->has('errors'))
+        {{session()->forget('create_avatar')}}
+    @endif
     <div class="container-fluid">
-        {{session()->forget('employee')}}
         <form method="POST"
               action=" @if(!empty($employee->id)){{route("employee_edit_confirm")}}@else{{route("employee_create_confirm")}} @endif"
               class="col" enctype="multipart/form-data">
@@ -48,11 +48,12 @@
                         <br>
 
                         <input type="hidden" name="avatar"
-                               value="@if(isset($employee)) {{$employee->avatar}} @elseif(session()->has('create_avatar') && session()->has('errors')) {{session()->get('create_avatar')}} @endif">
+                               value="@if(isset($employee) && !session()->has('employee')) {{$employee->avatar}} @elseif(session()->has('create_avatar') && session()->has('errors')){{session()->get('create_avatar')}}@elseif(session()->has('employee.avatar')){{session()->get('employee.avatar')}} @endif ">
 
                         <img style="width: 90px;" id="output"
-                             @if(isset($employee)) src="{{ asset('storage/uploads/employees/'.$employee->avatar) }}"
-                             @elseif(session()->has('create_avatar') && !$errors->has('upload_file')) src="{{ asset('storage/uploads/employees/'.session()->get('create_avatar')) }}" @endif>
+                             @if(isset($employee) && !session()->has('employee')) src="{{ asset('storage/uploads/employees/'.$employee->avatar) }}"
+                             @elseif(session()->has('employee.avatar')) src="{{ asset('storage/uploads/employees/'.session()->get('employee.avatar')) }}"
+                             @elseif(session()->has('create_avatar') && !$errors->has('upload_file')) src="{{ asset('storage/uploads/employees/'.session()->get('create_avatar')) }}"@endif>
 
                     </div>
                     <div class="form-group">
@@ -63,7 +64,7 @@
                             @endif
                             @foreach($teams as $team)
                                 <option value="{{$team->id}}"
-                                        @if((isset($employee) && ($team->id == $employee->team_id)) || $team->id == old('team_id') || ($team->id == session()->get('employee.team_id'))) selected @endif >{{$team->name}}</option>
+                                        @if($team->id == old('team_id') || (isset($employee) && ($team->id == $employee->team_id) && !session()->has('employee')) ) selected @endif >{{$team->name}}</option>
                             @endforeach
                         </select>
                         @error('team_id')
@@ -73,7 +74,7 @@
                     <div class="form-group">
                         <label>First name *</label>
                         <input type="text" class="form-control col-4" name="first_name"
-                               value="@if(!empty($employee)){{ $employee->first_name }}@else{{ old('first_name')}} @endif">
+                               value="@if(old('first_name')){{old('first_name')}} @elseif(!empty($employee)){{$employee->first_name}} @endif">
                         @error('first_name')
                         <span style="color: red">{{ $message }}</span>
                         @enderror
@@ -81,7 +82,7 @@
                     <div class="form-group">
                         <label>Last name *</label>
                         <input type="text" class="form-control col-4" name="last_name"
-                               value="@if(!empty($employee)){{ $employee->last_name }}@else{{ old('last_name')}} @endif">
+                               value="@if(old('last_name')){{old('last_name')}} @elseif(!empty($employee)){{$employee->last_name}} @endif">
                         @error('last_name')
                         <span style="color: red">{{ $message }}</span>
                         @enderror
@@ -89,7 +90,7 @@
                     <div class="form-group">
                         <label>Gmail *</label>
                         <input type="text" class="form-control col-4" name="email"
-                               value="@if(!empty($employee)){{ $employee->email }}@else{{ old('email') }}@endif">
+                               value="@if(old('email')){{old('email')}} @elseif(!empty($employee)){{$employee->email}} @endif">
                         @error('email')
                         <span style="color: red">{{ $message }}</span>
                         @enderror
@@ -116,7 +117,7 @@
                     <div class="form-group">
                         <label>Birthday *</label>
                         <input type="date" class="form-control col-4" name="birthday"
-                               value="@if(!empty($employee)){{$employee->birthday}}@else{{ old('birthday') }}@endif">
+                               value="@if(old('birthday')){{old('birthday')}}@elseif(!empty($employee)){{$employee->birthday}}@endif">
                         @error('birthday')
                         <span style="color: red">{{ $message }}</span>
                         @enderror
@@ -124,7 +125,7 @@
                     <div class="form-group">
                         <label>Address *</label>
                         <input type="text" class="form-control col-4" name="address"
-                               value="@if(!empty($employee)){{ $employee->address }}@else{{ old('address') }}@endif">
+                               value="@if(old('address')){{old('address')}} @elseif(!empty($employee)){{$employee->address}} @endif">
                         @error('address')
                         <span style="color: red">{{ $message }}</span>
                         @enderror
@@ -132,7 +133,7 @@
                     <div class="form-group">
                         <label>Salary *</label>
                         <input type="number" class="form-control col-4" name="salary"
-                               value="@if(!empty($employee)){{ $employee->salary }}@else{{ old('salary') }}@endif">VND
+                               value="@if(old('salary')){{old('salary')}}@elseif(!empty($employee)){{$employee->salary}}@endif">VND
                         @error('salary')
                         <span style="color: red">{{ $message }}</span>
                         @enderror
@@ -142,23 +143,23 @@
                         <select class="form-select col-4" name="position">
                             <option value="">Open this to select position</option>
                             <option value="{{config('constants.position.MANAGER')}}"
-                                    @if( (isset($employee) && ($employee->position == config('constants.position.MANAGER'))) || old('position') == config('constants.position.MANAGER') ) selected @endif>
+                                    @if((isset($employee) && ($employee->position == config('constants.position.MANAGER')) && !session()->has('employee')) || old('position') == config('constants.position.MANAGER')) selected @endif>
                                 Manager
                             </option>
                             <option value="{{config('constants.position.TEAM_LEADER')}}"
-                                    @if((isset($employee) && ($employee->position == config('constants.position.TEAM_LEADER'))) || old('position') == config('constants.position.TEAM_LEADER') ) selected @endif >
+                                    @if((isset($employee) && ($employee->position == config('constants.position.TEAM_LEADER')) && !session()->has('employee')) || old('position') == config('constants.position.TEAM_LEADER')) selected @endif >
                                 Team leader
                             </option>
                             <option value="{{config('constants.position.BSE')}}"
-                                    @if((isset($employee) && ($employee->position == config('constants.position.BSE'))) || old('position') == config('constants.position.BSE')) selected @endif>
+                                    @if((isset($employee) && ($employee->position == config('constants.position.BSE')) && !session()->has('employee')) || old('position') == config('constants.position.BSE')) selected @endif>
                                 BSE
                             </option>
                             <option value="{{config('constants.position.DEV')}}"
-                                    @if((isset($employee) && ($employee->position == config('constants.position.DEV')) ) || old('position') == config('constants.position.DEV')) selected @endif>
+                                    @if((isset($employee) && ($employee->position == config('constants.position.DEV')) && !session()->has('employee')) || old('position') == config('constants.position.DEV')) selected @endif>
                                 Dev
                             </option>
                             <option value="{{config('constants.position.TESTER')}}"
-                                    @if((isset($employee) && ($employee->position == config('constants.position.TESTER')) ) || old('position') == config('constants.position.TESTER')) selected @endif>
+                                    @if((isset($employee) && ($employee->position == config('constants.position.TESTER')) && !session()->has('employee')) || old('position') == config('constants.position.TESTER')) selected @endif>
                                 Tester
                             </option>
                         </select>
@@ -173,19 +174,19 @@
                         <select class="form-select col-4" name="type_of_work">
                             <option value="">Open this to select type of work</option>
                             <option value="{{config('constants.typeWork.FULLTIME')}}"
-                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.FULLTIME')) ) || old('type_of_work') == config('constants.typeWork.FULLTIME')) selected @endif>
+                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.FULLTIME')) && !session()->has('employee')) || old('type_of_work') == config('constants.typeWork.FULLTIME')) selected @endif>
                                 Fulltime
                             </option>
                             <option value="{{config('constants.typeWork.PARTIME')}}"
-                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.PARTIME')) ) || old('type_of_work') == config('constants.typeWork.PARTIME')) selected @endif>
+                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.PARTIME')) && !session()->has('employee')) || old('type_of_work') == config('constants.typeWork.PARTIME')) selected @endif>
                                 Partime
                             </option>
                             <option value="{{config('constants.typeWork.PROBATIONARY_STAFF')}}"
-                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.PROBATIONARY_STAFF')) ) || old('type_of_work') == config('constants.typeWork.PROBATIONARY_STAFF')) selected @endif>
+                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.PROBATIONARY_STAFF')) && !session()->has('employee')) || old('type_of_work') == config('constants.typeWork.PROBATIONARY_STAFF')) selected @endif>
                                 Probationary Staff
                             </option>
                             <option value="{{config('constants.typeWork.INTERN')}}"
-                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.INTERN')) ) || old('type_of_work') == config('constants.typeWork.INTERN')) selected @endif>
+                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.INTERN')) && !session()->has('employee')) || old('type_of_work') == config('constants.typeWork.INTERN')) selected @endif>
                                 Intern
                             </option>
                         </select>
@@ -217,12 +218,12 @@
             </div>
 
             <div class="row pt-2">
-                <button type="reset" name="reset" class="btn btn-secondary col-1">Reset</button>
+                <a href="{{route('employee.create')}}" class="btn btn-secondary col-1">Reset</a>
                 <div class="col-10"></div>
                 <button type="submit" name="confirm" class="btn btn-primary col-1">Confirm
                 </button>
             </div>
-
         </form>
+        {{session()->forget('employee')}}
     </div>
 @endsection

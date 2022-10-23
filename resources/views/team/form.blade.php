@@ -33,14 +33,14 @@
                 <div class="form-group p-3">
                     <label>Name</label>
                     <input type="text" class="form-control col-4" name="name"
-                           value="@if(!empty($team)) {{ $team->name }} @endif">
+                           value="@if(old('name')){{old('name')}} @elseif(!empty($team)) {{$team->name}}  @endif">
                     @error('name')
                     <span style="color: red">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
             <div class="row pt-2">
-                <button type="reset" name="reset" class="btn btn-secondary col-1">Reset</button>
+                <a href="{{route('team.create')}}" class="btn btn-secondary col-1">Reset</a>
                 <div class="col-10"></div>
                 <button type="submit" name="confirm" class="btn btn-primary col-1">Confirm
                 </button>

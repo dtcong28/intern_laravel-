@@ -29,7 +29,7 @@ class EmployeeRequest extends FormRequest
             'team_id' => ['required'],
             'first_name' => ['required'],
             'last_name' => ['required'],
-            'email' => ['required', 'email', 'not_regex:/^[root]/', Rule::unique('employees')->ignore($this->id)],
+            'email' => ['required', 'email', Rule::unique('employees')->ignore($this->id)],
             'gender' => ['required'],
             'birthday' => ['required'],
             'address' => ['required'],
@@ -43,13 +43,17 @@ class EmployeeRequest extends FormRequest
             $rules['upload_file'] = ['required', 'image', 'mimes:png,gif,jpeg', 'max:10000'];
         }
 
+        if ($this->has("avatar")) {
+            $rules['upload_file'] = ['nullable', 'image', 'mimes:png,gif,jpeg', 'max:10000'];
+        }
+
+        // upload image
         if ($this->has("upload_file")) {
             $file = $this->upload_file;
             $ext = $file->extension();
             $file_name = time() . '-' . 'employee.' . $ext;
             session()->put('create_avatar',$file_name);
             $file->storeAs(config('constants.path.PATH_UPLOAD_EMPLOYEE'), $file_name);
-
         }
 
         return $rules;

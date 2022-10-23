@@ -18,8 +18,6 @@
             </div>
         </div>
     </div>
-    {{ var_dump(session()->get('employee') )}}
-
     <div class="container-fluid">
         <form method="POST"
               action="@if(session()->has('employee.id')) {{route("employee.update",session()->get('employee.id'))}} @else {{route("employee.store")}} @endif"
@@ -32,7 +30,7 @@
                 <div class="m-2">
                     @if(session()->has('employee.id'))
                         <div class="form-group ">
-                            <label>ID</label>
+                            <label>ID *</label>
                             <span>{{session()->get('employee.id')}}</span>
                         </div>
                     @endif
@@ -44,7 +42,7 @@
                         @endif
                     </div>
                     <div class="form-group">
-                        <label>Team *</label><br>
+                        <label>Team *</label>
                         <span>@foreach($teams as $team)@if(session()->get('employee.team_id') == $team->id){{$team->name}}@endif @endforeach</span>
                     </div>
                     <div class="form-group">
@@ -60,7 +58,7 @@
                         <span>{{session()->get('employee.email')}}</span>
                     </div>
                     <div class="form-group">
-                        <label>Gender *</label><br>
+                        <label>Gender *</label>
                         <span>@if(session()->get('employee.gender') == config('constants.gender.MALE')) Male @else
                                 Female @endif</span>
                     </div>
@@ -77,7 +75,7 @@
                         <span>{{session()->get('employee.salary')}}</span>
                     </div>
                     <div class="form-group">
-                        <label>Position *</label><br>
+                        <label>Position *</label>
                         <span>@if(session()->get('employee.position') == config('constants.position.MANAGER'))
                                 Manager @elseif(session()->get('employee.position') == config('constants.position.TEAM_LEADER'))
                                 Team
@@ -86,14 +84,14 @@
                                 Dev @else Tester @endif</span>
                     </div>
                     <div class="form-group">
-                        <label>Type of work *</label><br>
+                        <label>Type of work *</label>
                         <span>@if(session()->get('employee.type_of_work') == config('constants.typeWork.FULLTIME'))
                                 Fulltime @elseif(session()->get('employee.type_of_work') == config('constants.typeWork.PARTIME'))
                                 Partime @elseif(session()->get('employee.type_of_work') == config('constants.typeWork.PROBATIONARY_STAFF'))
                                 Probationay staff @else Intern @endif</span>
                     </div>
                     <div class="form-group">
-                        <label>Status *</label><br>
+                        <label>Status *</label>
                         <span>@if(session()->get('employee.status') == config('constants.status.ON_WORKING')) On
                             working @else Retired @endif</span>
                     </div>
@@ -101,9 +99,35 @@
                 </div>
             </div>
             <div class="row">
-                <a href="javascript:window.history.back();" class="btn btn-secondary col-1">Back</a>
+                <a href="{{url()->previous()}}" class="btn btn-secondary col-1">Back</a>
                 <div class="col-10"></div>
-                <button type="submit" onclick="return Confirm()" name="save" class="btn btn-primary col-1">Save</button>
+                <button type="button" class="btn btn-primary col-1" data-toggle="modal" data-target="#modal-default">
+                    Save
+                </button>
+
+                <div class="modal fade" id="modal-default">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Confirm</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure ?</p>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <form action="{{ route('employee.store') }}" method="POST" style="display: inline-block">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </form>
     </div>

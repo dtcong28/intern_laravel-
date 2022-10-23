@@ -1,10 +1,4 @@
-<footer class="main-footer ">
-    <strong>Copyright &copy; 2014-2022 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 3.2.0
-    </div>
-</footer>
+
 
 <!-- jQuery -->
 <script src="/template/admin/plugins/jquery/jquery.min.js"></script>
@@ -38,7 +32,10 @@
 <script src="/template/admin/dist/js/adminlte.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="/template/admin/dist/js/pages/dashboard.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/template/admin/dist/js/demo.js"></script>
 <script src="/template/admin/js/main.js"></script>
+
 <script>
     function Confirm() {
         return confirm('Are your sure ?');
@@ -51,4 +48,14 @@
             URL.revokeObjectURL(output.src) // free memory
         }
     };
+
+    // Initialize tooltip component
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    // Initialize popover component
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
 </script>

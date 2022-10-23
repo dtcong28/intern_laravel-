@@ -7,7 +7,13 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-
+    @php
+        if(str_contains($_SERVER['REQUEST_URI'],'team')  ){
+            session()->put('module_active','team');
+        }else {
+            session()->put('module_active','employee');
+        }
+    @endphp
     @include('layout.navbar')
     @include('layout.siderbar')
     <div class="content-wrapper">
@@ -33,7 +39,13 @@
         </section>
         <!-- /.content -->
     </div>
-
+    <footer class="main-footer ">
+        <strong>Copyright &copy; 2014-2022 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+        All rights reserved.
+        <div class="float-right d-none d-sm-inline-block">
+            <b>Version</b> 3.2.0
+        </div>
+    </footer>
     @include('layout.footer')
 </div>
 </body>

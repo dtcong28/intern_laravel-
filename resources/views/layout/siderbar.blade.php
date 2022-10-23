@@ -46,50 +46,53 @@
                     </div>
 
                     <!-- Sidebar Menu -->
+                    @php
+                        $module_active=session('module_active');
+                    @endphp
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                            <li class="nav-item menu-open">
-                                <a href="#" class="nav-link active">
+                            <li class="nav-item {{$module_active =='team' ? 'menu-is-opening menu-open': ''}}">
+                                <a href="{{route("team.index")}}" class="nav-link {{$module_active =='team' ? 'active': ''}}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>
-                                        Team management
+                                        Team
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
-                                <ul class="nav nav-treeview">
+                                <ul class="nav nav-treeview ">
                                     <li class="nav-item">
-                                        <a href="{{route("team.index")}}" class="nav-link ">
+                                        <a href="{{route("team.index")}}" class="nav-link {{(request()->is('management/team')) ? 'active':''}} ">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Search</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route("team.create")}}" class="nav-link">
+                                        <a href="{{route("team.create")}}" class="nav-link {{(request()->is('management/team/create')) ? 'active':''}}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Create</p>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-item menu-open">
-                                <a href="#" class="nav-link active">
+                            <li class="nav-item {{$module_active =='employee' ? 'menu-is-opening menu-open': ''}}">
+                                <a href="{{route("employee.index")}}" class="nav-link {{$module_active =='employee' ? 'active': ''}}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>
-                                        Employee management
+                                        Employee
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="{{route("employee.index")}}" class="nav-link ">
+                                        <a href="{{route("employee.index")}}" class="nav-link {{(request()->is('management/employee')) ? 'active':''}}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Search</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route("employee.create")}}" class="nav-link">
+                                        <a href="{{route("employee.create")}}" class="nav-link {{(request()->is('management/employee/create')) ? 'active':''}}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Create</p>
                                         </a>
@@ -102,13 +105,13 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                    <a class="dropdown-item" href="{{ route('admin.logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
                                 </div>

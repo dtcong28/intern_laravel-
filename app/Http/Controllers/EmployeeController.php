@@ -55,7 +55,8 @@ class EmployeeController extends Controller
 
     public function createConfirm(EmployeeRequest $request)
     {
-        uploadImg($request);
+        $request->flash();
+        mergeAvatarToRequest($request);
         $data = $request->except('upload_file');
         $request->session()->put('employee', $data);
 
@@ -68,6 +69,7 @@ class EmployeeController extends Controller
         try {
             $employee = session()->pull('employee');
             $storedEmployee = $this->employeeRepository->save($employee);
+            session()->forget('create_avatar');
 
             SendWelcomeEmail::dispatch($storedEmployee)->delay(now()->addMinute(1));
 
@@ -97,7 +99,8 @@ class EmployeeController extends Controller
 
     public function editConfirm(EmployeeRequest $request)
     {
-        uploadImg($request);
+        $request->flash();
+        mergeAvatarToRequest($request);
         $data = $request->except('upload_file');
         $request->session()->put('employee', $data);
 
@@ -116,6 +119,7 @@ class EmployeeController extends Controller
             }
 
             $this->employeeRepository->save($employee, ['id' => $id]);
+            session()->forget('create_avatar');
             return redirect()->route('employee.index')->with('success', config('constants.messages.UPDATE_SUCCESS'));
         } catch (\Exception $e) {
             Log::error($e);
