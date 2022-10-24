@@ -16,7 +16,8 @@ return [
     ],
 
     'path' => [
-        'PATH_UPLOAD_EMPLOYEE' => 'public/uploads/employees'
+        'PATH_UPLOAD_EMPLOYEE' => 'public/uploads/employees',
+        'PATH_EMPLOYEE'=> 'storage/uploads/employees/'
     ],
 
     'gender' => [
@@ -45,6 +46,11 @@ return [
     ],
 
     'pagination' => [
-        'PER_PAGE' => 3,
+        'PER_PAGE' => 5,
+    ],
+
+    'action' => [
+        'ACTIVE' => 0,
+        'DELETED' => 1,
     ]
 ];

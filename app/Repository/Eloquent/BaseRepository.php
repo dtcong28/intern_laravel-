@@ -32,12 +32,22 @@ class BaseRepository implements BaseRepositoryInterface
 
     public function deleteById($id)
     {
-        return $this->model->updateOrCreate(['id' => $id], ['del_flag' => 1]);
+        $inputs = [
+            'del_flag' => config('constants.action.DELETED'),
+            'upd_datetime' => date('Y-m-d H:i:s'),
+            'upd_id' => Auth::user()->id,
+        ];
+        return $this->model->updateOrCreate(['id' => $id], $inputs);
     }
 
     public function delete(array $conditions = [])
     {
-        return $this->model->where($conditions)->update(['del_flag' => 1]);
+        $inputs = [
+            'del_flag' => config('constants.action.DELETED'),
+            'upd_datetime' => date('Y-m-d H:i:s'),
+            'upd_id' => Auth::user()->id,
+        ];
+        return $this->model->where($conditions)->update($inputs);
     }
 
     public function getAll(array $input = [])

@@ -51,10 +51,9 @@
                                value="@if(isset($employee) && !session()->has('employee')) {{$employee->avatar}} @elseif(session()->has('create_avatar') && session()->has('errors')){{session()->get('create_avatar')}}@elseif(session()->has('employee.avatar')){{session()->get('employee.avatar')}} @endif ">
 
                         <img style="width: 90px;" id="output"
-                             @if(isset($employee) && !session()->has('employee')) src="{{ asset('storage/uploads/employees/'.$employee->avatar) }}"
-                             @elseif(session()->has('employee.avatar')) src="{{ asset('storage/uploads/employees/'.session()->get('employee.avatar')) }}"
-                             @elseif(session()->has('create_avatar') && !$errors->has('upload_file')) src="{{ asset('storage/uploads/employees/'.session()->get('create_avatar')) }}"@endif>
-
+                             @if(isset($employee) && !session()->has('employee')) src="{{ asset(config('constants.path.PATH_EMPLOYEE').$employee->avatar) }}"
+                             @elseif(session()->has('employee.avatar')) src="{{ asset(config('constants.path.PATH_EMPLOYEE').session()->get('employee.avatar')) }}"
+                             @elseif(session()->has('create_avatar') && !$errors->has('upload_file')) src="{{ asset(config('constants.path.PATH_EMPLOYEE').session()->get('create_avatar')) }}"@endif>
                     </div>
                     <div class="form-group">
                         <label>Team *</label><br>
@@ -142,26 +141,22 @@
                         <label>Position *</label><br>
                         <select class="form-select col-4" name="position">
                             <option value="">Open this to select position</option>
-                            <option value="{{config('constants.position.MANAGER')}}"
-                                    @if((isset($employee) && ($employee->position == config('constants.position.MANAGER')) && !session()->has('employee')) || old('position') == config('constants.position.MANAGER')) selected @endif>
-                                Manager
-                            </option>
-                            <option value="{{config('constants.position.TEAM_LEADER')}}"
-                                    @if((isset($employee) && ($employee->position == config('constants.position.TEAM_LEADER')) && !session()->has('employee')) || old('position') == config('constants.position.TEAM_LEADER')) selected @endif >
-                                Team leader
-                            </option>
-                            <option value="{{config('constants.position.BSE')}}"
-                                    @if((isset($employee) && ($employee->position == config('constants.position.BSE')) && !session()->has('employee')) || old('position') == config('constants.position.BSE')) selected @endif>
-                                BSE
-                            </option>
-                            <option value="{{config('constants.position.DEV')}}"
-                                    @if((isset($employee) && ($employee->position == config('constants.position.DEV')) && !session()->has('employee')) || old('position') == config('constants.position.DEV')) selected @endif>
-                                Dev
-                            </option>
-                            <option value="{{config('constants.position.TESTER')}}"
-                                    @if((isset($employee) && ($employee->position == config('constants.position.TESTER')) && !session()->has('employee')) || old('position') == config('constants.position.TESTER')) selected @endif>
-                                Tester
-                            </option>
+                            @foreach(config('constants.position') as $position)
+                                <option value="{{ $position }}"
+                                        @if((isset($employee) && ($employee->position == $position) && !session()->has('employee')) || old('position') == $position) selected @endif>
+                                    @if($position == config('constants.position.MANAGER'))
+                                        Manager
+                                    @elseif($position == config('constants.position.TEAM_LEADER'))
+                                        Team leader
+                                    @elseif($position == config('constants.position.BSE'))
+                                        BSE
+                                    @elseif($position == config('constants.position.DEV'))
+                                        DEV
+                                    @elseif($position == config('constants.position.TESTER'))
+                                        Tester
+                                    @endif
+                                </option>
+                            @endforeach
                         </select>
                         @error('position')
                         @if(old('position') == '')
@@ -173,22 +168,20 @@
                         <label>Type of work *</label><br>
                         <select class="form-select col-4" name="type_of_work">
                             <option value="">Open this to select type of work</option>
-                            <option value="{{config('constants.typeWork.FULLTIME')}}"
-                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.FULLTIME')) && !session()->has('employee')) || old('type_of_work') == config('constants.typeWork.FULLTIME')) selected @endif>
-                                Fulltime
-                            </option>
-                            <option value="{{config('constants.typeWork.PARTIME')}}"
-                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.PARTIME')) && !session()->has('employee')) || old('type_of_work') == config('constants.typeWork.PARTIME')) selected @endif>
-                                Partime
-                            </option>
-                            <option value="{{config('constants.typeWork.PROBATIONARY_STAFF')}}"
-                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.PROBATIONARY_STAFF')) && !session()->has('employee')) || old('type_of_work') == config('constants.typeWork.PROBATIONARY_STAFF')) selected @endif>
-                                Probationary Staff
-                            </option>
-                            <option value="{{config('constants.typeWork.INTERN')}}"
-                                    @if((isset($employee) && ($employee->type_of_work == config('constants.typeWork.INTERN')) && !session()->has('employee')) || old('type_of_work') == config('constants.typeWork.INTERN')) selected @endif>
-                                Intern
-                            </option>
+                            @foreach(config('constants.typeWork') as $typeWork)
+                                <option value="{{ $typeWork }}"
+                                        @if((isset($employee) && ($employee->type_of_work == $typeWork) && !session()->has('employee')) || old('type_of_work') == $typeWork) selected @endif>
+                                    @if($typeWork == config('constants.typeWork.FULLTIME'))
+                                        Fulltime
+                                    @elseif($typeWork == config('constants.typeWork.PARTIME'))
+                                        Partime
+                                    @elseif($typeWork == config('constants.typeWork.PROBATIONARY_STAFF'))
+                                        Probationary Staff
+                                    @elseif($typeWork == config('constants.typeWork.INTERN'))
+                                        Intern
+                                    @endif
+                                </option>
+                            @endforeach
                         </select>
                         @error('type_of_work')
                         <span style="color: red">{{ $message }}</span>
@@ -196,18 +189,15 @@
                     </div>
                     <div class="form-group">
                         <label>Status *</label><br>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="status"
-                                   value="{{config('constants.status.ON_WORKING')}}"
-                                   @if((isset($employee) && $employee->status == config('constants.status.ON_WORKING') ) || old('status') == config('constants.status.ON_WORKING') ) checked @endif>
-                            <label class="form-check-label">On working</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="status"
-                                   value="{{config('constants.status.RETIRED')}}"
-                                   @if((isset($employee) && $employee->status == config('constants.status.RETIRED') ) || old('status') == config('constants.status.RETIRED')) checked @endif>
-                            <label class="form-check-label">Retired</label>
-                        </div>
+                        @foreach(config('constants.status') as $status)
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status"
+                                       value="{{$status}}"
+                                       @if((isset($employee) && $employee->status == $status ) || old('status') == $status ) checked @endif>
+                                <label class="form-check-label">@if($status == config('constants.status.ON_WORKING'))On
+                                    working @elseif($status == config('constants.status.RETIRED'))Retired @endif</label>
+                            </div>
+                        @endforeach
                         <br>
                         @error('status')
                         <span style="color: red">{{ $message }}</span>

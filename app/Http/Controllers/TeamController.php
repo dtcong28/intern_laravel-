@@ -29,8 +29,10 @@ class TeamController extends Controller
     public function index(Request $request)
     {
         $searchName = $request->get('searchName');
-        $result = $this->teamRepository->findByName(trim($searchName));
+
+        $result = $this->teamRepository->findByName($searchName);
         $result->appends($request->all());
+
         return view('team.index', [
             'teams' => $result
         ]);
@@ -56,7 +58,7 @@ class TeamController extends Controller
             $this->teamRepository->save($team);
             return redirect()->route('team.index')->with('success', config('constants.messages.CREATE_SUCCESS'));
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Message: ' . $e->getMessage() . ' Line : ' . $e->getLine());
             return redirect()->route('team.index')->with('fail', config('constants.messages.CREATE_FAIL'));
         }
     }
@@ -70,7 +72,7 @@ class TeamController extends Controller
             }
             return view('team.form', ['team' => $team]);
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Message: ' . $e->getMessage() . ' Line : ' . $e->getLine());
             return redirect()->route('team.index')->with('fail', config('constants.messages.EDIT_FAIL'));
         }
 
@@ -97,7 +99,7 @@ class TeamController extends Controller
             $this->teamRepository->save($team, ['id' => $id]);
             return redirect()->route('team.index')->with('success', config('constants.messages.UPDATE_SUCCESS'));
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Message: ' . $e->getMessage() . ' Line : ' . $e->getLine());
             return redirect()->route('team.index')->with('fail', config('constants.messages.UPDATE_FAIL'));
         }
 
@@ -119,7 +121,7 @@ class TeamController extends Controller
             return redirect()->route('team.index')->with('success', config('constants.messages.DELETE_SUCCESS'));
         } catch (\Exception $e){
             DB::rollback();
-            Log::error($e);
+            Log::error('Message: ' . $e->getMessage() . ' Line : ' . $e->getLine());
             return redirect()->route('team.index')->with('fail', config('constants.messages.DELETE_FAIL'));
         }
     }

@@ -76,26 +76,47 @@
                     </div>
                     <div class="form-group">
                         <label>Position *</label>
-                        <span>@if(session()->get('employee.position') == config('constants.position.MANAGER'))
-                                Manager @elseif(session()->get('employee.position') == config('constants.position.TEAM_LEADER'))
-                                Team
-                                leader @elseif(session()->get('employee.position') == config('constants.position.BSE'))
-                                Bse @elseif(session()->get('employee.position') == config('constants.position.DEV'))
-                                Dev @else Tester @endif</span>
+                        <span>
+                            @foreach(config('constants.position') as $position)
+                                @if(session()->get('employee.position') == $position)
+                                    @if($position == config('constants.position.MANAGER'))
+                                        Manager
+                                    @elseif($position == config('constants.position.TEAM_LEADER'))
+                                        Team leader
+                                    @elseif($position == config('constants.position.BSE'))
+                                        Bse
+                                    @elseif($position == config('constants.position.DEV'))
+                                        Dev
+                                    @elseif($position == config('constants.position.TESTER'))
+                                        Tester
+                                    @endif
+                                @endif
+                            @endforeach
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>Type of work *</label>
-                        <span>@if(session()->get('employee.type_of_work') == config('constants.typeWork.FULLTIME'))
-                                Fulltime @elseif(session()->get('employee.type_of_work') == config('constants.typeWork.PARTIME'))
-                                Partime @elseif(session()->get('employee.type_of_work') == config('constants.typeWork.PROBATIONARY_STAFF'))
-                                Probationay staff @else Intern @endif</span>
+                        <span>
+                            @foreach(config('constants.typeWork') as $typeWork)
+                                @if(session()->get('employee.type_of_work') == $typeWork)
+                                    @if($typeWork == config('constants.typeWork.FULLTIME'))
+                                        Fulltime
+                                    @elseif($typeWork == config('constants.typeWork.PARTIME'))
+                                        Partime
+                                    @elseif($typeWork == config('constants.typeWork.PROBATIONARY_STAFF'))
+                                        Probationay staff
+                                    @elseif($typeWork == config('constants.typeWork.INTERN'))
+                                        Intern
+                                    @endif
+                                @endif
+                            @endforeach
+                        </span>
                     </div>
                     <div class="form-group">
                         <label>Status *</label>
                         <span>@if(session()->get('employee.status') == config('constants.status.ON_WORKING')) On
                             working @else Retired @endif</span>
                     </div>
-
                 </div>
             </div>
             <div class="row">

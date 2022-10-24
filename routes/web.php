@@ -6,6 +6,8 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\CheckLogin;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,21 +35,23 @@ Route::group(['prefix' => 'management'], function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
-    // Team
-    Route::group(['prefix' => 'team','middleware' => ['auth.checklogin']], function () {
-        Route::post('create_confirm', [TeamController::class, 'createConfirm'])->name('team_create_confirm');
-        Route::post('edit_confirm', [TeamController::class, 'editConfirm'])->name('team_edit_confirm');
-    });
-    Route::resource('team', TeamController::class)->middleware('auth.checklogin');
+    Route::middleware([CheckLogin::class])->group(function () {
+        // Team
+        Route::group(['prefix' => 'team'], function () {
+            Route::post('create_confirm', [TeamController::class, 'createConfirm'])->name('team_create_confirm');
+            Route::post('edit_confirm', [TeamController::class, 'editConfirm'])->name('team_edit_confirm');
+        });
+        Route::resource('team', TeamController::class);
 
-    // Employee
-    Route::group(['prefix' => 'employee','middleware' => ['auth.checklogin']], function () {
-        Route::post('create_confirm', [EmployeeController::class, 'createConfirm'])->name('employee_create_confirm');
-        Route::post('edit_confirm', [EmployeeController::class, 'editConfirm'])->name('employee_edit_confirm');
+        // Employee
+        Route::group(['prefix' => 'employee'], function () {
+            Route::post('create_confirm', [EmployeeController::class, 'createConfirm'])->name('employee_create_confirm');
+            Route::post('edit_confirm', [EmployeeController::class, 'editConfirm'])->name('employee_edit_confirm');
 
-        Route::get('export_file/csv', [EmployeeController::class, 'exportFile'])->name('employee.export_file');
+            Route::get('export_file/csv', [EmployeeController::class, 'exportFile'])->name('employee.export_file');
+        });
+        Route::resource('employee', EmployeeController::class);
     });
-    Route::resource('employee', EmployeeController::class)->middleware('auth.checklogin');
 });
 
 

@@ -28,18 +28,20 @@ class EmployeeController extends Controller
     {
         $listTeam = $this->teamRepository->getAll();
 
-        $teamId = $request->get('team_id');
-        $searchName = $request->get('searchName');
-        $searchEmail = $request->get('searchEmail');
+        $dataSearch = [
+            'teamId' => $request->get('team_id'),
+            'searchName' => $request->get('searchName'),
+            'searchEmail' => $request->get('searchEmail')
+        ];
 
         // data export
         $column = ['id','first_name','last_name','email', 'address'];
-        $dataExport = $this->employeeRepository->findByTeamOrNameOrEmail($column,$teamId, $searchName, $searchEmail,0);
+        $dataExport = $this->employeeRepository->findByTeamOrNameOrEmail($column,$dataSearch,0);
         session()->put('exportFile', $dataExport);
 
         // Xử lý N+1 trong findByTeamOrNameOrEmail
         $column = ['id','team_id','first_name','last_name','email'];
-        $result = $this->employeeRepository->findByTeamOrNameOrEmail($column,$teamId, $searchName, $searchEmail);
+        $result = $this->employeeRepository->findByTeamOrNameOrEmail($column,$dataSearch);
         $result->appends($request->all());
 
         return view('employee.index', [
@@ -75,7 +77,7 @@ class EmployeeController extends Controller
 
             return redirect()->route('employee.index')->with('success', config('constants.messages.CREATE_SUCCESS'));
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Message: ' . $e->getMessage() . ' Line : ' . $e->getLine());
             return redirect()->route('employee.index')->with('fail', config('constants.messages.CREATE_FAIL'));
         }
     }
@@ -91,7 +93,7 @@ class EmployeeController extends Controller
             }
             return view('employee.form', ['employee' => $employee, 'teams' => $teams]);
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Message: ' . $e->getMessage() . ' Line : ' . $e->getLine());
             return redirect()->route('employee.index')->with('fail', config('constants.messages.EDIT_FAIL'));
         }
 
@@ -122,7 +124,7 @@ class EmployeeController extends Controller
             session()->forget('create_avatar');
             return redirect()->route('employee.index')->with('success', config('constants.messages.UPDATE_SUCCESS'));
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Message: ' . $e->getMessage() . ' Line : ' . $e->getLine());
             return redirect()->route('employee.index')->with('fail', config('constants.messages.UPDATE_FAIL'));
         }
     }
@@ -139,7 +141,7 @@ class EmployeeController extends Controller
             $this->employeeRepository->deleteById($id);
             return redirect()->route('employee.index')->with('success', config('constants.messages.DELETE_SUCCESS'));
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error('Message: ' . $e->getMessage() . ' Line : ' . $e->getLine());
             return redirect()->route('employee.index')->with('fail', config('constants.messages.DELETE_FAIL'));
         }
     }
