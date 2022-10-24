@@ -1,8 +1,10 @@
 @extends('main')
 @if(empty($employee))
     @section('title', 'Create Employee')
+    @php session()->put('action', 'create') @endphp
 @else
     @section('title', 'Edit Employee')
+    @php session()->put('action', 'edit') @endphp
 @endif
 
 @section('content')
@@ -23,6 +25,7 @@
     @if(!session()->has('errors'))
         {{session()->forget('create_avatar')}}
     @endif
+{{--    {{var_dump(!session()->has('create_avatar'))}}--}}
     <div class="container-fluid">
         <form method="POST"
               action=" @if(!empty($employee->id)){{route("employee_edit_confirm")}}@else{{route("employee_create_confirm")}} @endif"
@@ -144,17 +147,7 @@
                             @foreach(config('constants.position') as $position)
                                 <option value="{{ $position }}"
                                         @if((isset($employee) && ($employee->position == $position) && !session()->has('employee')) || old('position') == $position) selected @endif>
-                                    @if($position == config('constants.position.MANAGER'))
-                                        Manager
-                                    @elseif($position == config('constants.position.TEAM_LEADER'))
-                                        Team leader
-                                    @elseif($position == config('constants.position.BSE'))
-                                        BSE
-                                    @elseif($position == config('constants.position.DEV'))
-                                        DEV
-                                    @elseif($position == config('constants.position.TESTER'))
-                                        Tester
-                                    @endif
+                                        {{array_search($position, config('constants.position'))}}
                                 </option>
                             @endforeach
                         </select>
@@ -171,15 +164,7 @@
                             @foreach(config('constants.typeWork') as $typeWork)
                                 <option value="{{ $typeWork }}"
                                         @if((isset($employee) && ($employee->type_of_work == $typeWork) && !session()->has('employee')) || old('type_of_work') == $typeWork) selected @endif>
-                                    @if($typeWork == config('constants.typeWork.FULLTIME'))
-                                        Fulltime
-                                    @elseif($typeWork == config('constants.typeWork.PARTIME'))
-                                        Partime
-                                    @elseif($typeWork == config('constants.typeWork.PROBATIONARY_STAFF'))
-                                        Probationary Staff
-                                    @elseif($typeWork == config('constants.typeWork.INTERN'))
-                                        Intern
-                                    @endif
+                                        {{array_search($typeWork, config('constants.typeWork'))}}
                                 </option>
                             @endforeach
                         </select>
@@ -194,8 +179,7 @@
                                 <input class="form-check-input" type="radio" name="status"
                                        value="{{$status}}"
                                        @if((isset($employee) && $employee->status == $status ) || old('status') == $status ) checked @endif>
-                                <label class="form-check-label">@if($status == config('constants.status.ON_WORKING'))On
-                                    working @elseif($status == config('constants.status.RETIRED'))Retired @endif</label>
+                                <label class="form-check-label">{{array_search($status, config('constants.status'))}}</label>
                             </div>
                         @endforeach
                         <br>

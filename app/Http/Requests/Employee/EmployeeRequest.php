@@ -43,7 +43,7 @@ class EmployeeRequest extends FormRequest
             $rules['upload_file'] = ['required', 'image', 'mimes:png,gif,jpeg', 'max:10000'];
         }
 
-        if ($this->has("avatar")) {
+        if ($this->has("avatar") && session()->get('action') == 'edit') {
             $rules['upload_file'] = ['nullable', 'image', 'mimes:png,gif,jpeg', 'max:10000'];
         }
 

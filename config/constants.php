@@ -27,7 +27,7 @@ return [
 
     'position' => [
         'MANAGER' => 1,
-        'TEAM_LEADER' => 2,
+        'TEAM LEADER' => 2,
         'BSE' => 3,
         'DEV' => 4,
         'TESTER' => 5
@@ -36,12 +36,12 @@ return [
     'typeWork' => [
         'FULLTIME' => 1,
         'PARTIME' => 2,
-        'PROBATIONARY_STAFF' => 3,
+        'PROBATIONARY STAFF' => 3,
         'INTERN' => 4,
     ],
 
     'status' => [
-        'ON_WORKING' => 1,
+        'ON WORKING' => 1,
         'RETIRED' => 2,
     ],
 

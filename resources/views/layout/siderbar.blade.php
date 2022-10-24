@@ -29,8 +29,6 @@
                             <a href="#" class="d-block">Admin</a>
                         </div>
                     </div>
-
-
                     <!-- Sidebar Menu -->
                     @php
                         $module_active=session('module_active');

@@ -38,7 +38,7 @@
                         <label>Avatar *</label><br>
                         @if(session()->has('employee.avatar'))
                             <img style="width: 90px"
-                                 src="{{ asset('storage/uploads/employees/'. session()->get('employee.avatar') ) }}"/>
+                                 src="{{ asset(config('constants.path.PATH_EMPLOYEE'). session()->get('employee.avatar') ) }}"/>
                         @endif
                     </div>
                     <div class="form-group">
@@ -79,17 +79,7 @@
                         <span>
                             @foreach(config('constants.position') as $position)
                                 @if(session()->get('employee.position') == $position)
-                                    @if($position == config('constants.position.MANAGER'))
-                                        Manager
-                                    @elseif($position == config('constants.position.TEAM_LEADER'))
-                                        Team leader
-                                    @elseif($position == config('constants.position.BSE'))
-                                        Bse
-                                    @elseif($position == config('constants.position.DEV'))
-                                        Dev
-                                    @elseif($position == config('constants.position.TESTER'))
-                                        Tester
-                                    @endif
+                                    {{array_search($position, config('constants.position'))}}
                                 @endif
                             @endforeach
                         </span>
@@ -99,23 +89,20 @@
                         <span>
                             @foreach(config('constants.typeWork') as $typeWork)
                                 @if(session()->get('employee.type_of_work') == $typeWork)
-                                    @if($typeWork == config('constants.typeWork.FULLTIME'))
-                                        Fulltime
-                                    @elseif($typeWork == config('constants.typeWork.PARTIME'))
-                                        Partime
-                                    @elseif($typeWork == config('constants.typeWork.PROBATIONARY_STAFF'))
-                                        Probationay staff
-                                    @elseif($typeWork == config('constants.typeWork.INTERN'))
-                                        Intern
-                                    @endif
+                                    {{array_search($typeWork, config('constants.typeWork'))}}
                                 @endif
                             @endforeach
                         </span>
                     </div>
                     <div class="form-group">
                         <label>Status *</label>
-                        <span>@if(session()->get('employee.status') == config('constants.status.ON_WORKING')) On
-                            working @else Retired @endif</span>
+                        <span>
+                            @foreach(config('constants.status') as $status)
+                                @if(session()->get('employee.status') == $status)
+                                    {{array_search($status, config('constants.status'))}}
+                                @endif
+                            @endforeach
+                        </span>
                     </div>
                 </div>
             </div>

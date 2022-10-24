@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // neu develop tren local can xoa dong nay di
-//        resolve(\Illuminate\Routing\UrlGenerator::class)->forceScheme('https');
+        resolve(\Illuminate\Routing\UrlGenerator::class)->forceScheme('https');
 
         Paginator::useBootstrapFive();
     }

@@ -8,7 +8,7 @@
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
     @php
-        if(str_contains($_SERVER['REQUEST_URI'],'team')  ){
+        if(str_contains($_SERVER['REQUEST_URI'],'management/team')  ){
             session()->put('module_active','team');
         }else {
             session()->put('module_active','employee');
