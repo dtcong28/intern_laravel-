@@ -42,8 +42,11 @@ class EmployeeRequest extends FormRequest
         if (!$this->has("upload_file") && !session()->has('create_avatar')) {
             $rules['upload_file'] = ['required', 'image', 'mimes:png,gif,jpeg', 'max:10000'];
         }
+//        var_dump(1);
+//        var_dump($this->session()->has('employee.avatar'));
 
-        if ($this->has("avatar") && session()->get('action') == 'edit') {
+//        dd( $this->session()->all());
+        if (($this->has("avatar") && session()->get('action') == 'edit') || session()->get('action') == 'check_create') {
             $rules['upload_file'] = ['nullable', 'image', 'mimes:png,gif,jpeg', 'max:10000'];
         }
 

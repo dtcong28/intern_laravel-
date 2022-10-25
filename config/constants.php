@@ -12,7 +12,7 @@ return [
 
         'NO_DATA' => 'Data does not exist',
 
-        'LOGIN_FAIL' => 'Login fail'
+        'LOGIN_FAIL' => '(*) Email or password is incorrect'
     ],
 
     'path' => [

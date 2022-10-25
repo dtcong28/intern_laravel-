@@ -1,7 +1,12 @@
 @extends('main')
 @if(empty($employee))
     @section('title', 'Create Employee')
-    @php session()->put('action', 'create') @endphp
+    @php
+        session()->put('action', 'create');
+        if(session()->has('employee.avatar')) {
+            session()->put('action', 'check_create');
+        }
+    @endphp
 @else
     @section('title', 'Edit Employee')
     @php session()->put('action', 'edit') @endphp
@@ -25,7 +30,7 @@
     @if(!session()->has('errors'))
         {{session()->forget('create_avatar')}}
     @endif
-{{--    {{var_dump(!session()->has('create_avatar'))}}--}}
+
     <div class="container-fluid">
         <form method="POST"
               action=" @if(!empty($employee->id)){{route("employee_edit_confirm")}}@else{{route("employee_create_confirm")}} @endif"
@@ -76,7 +81,7 @@
                     <div class="form-group">
                         <label>First name *</label>
                         <input type="text" class="form-control col-4" name="first_name"
-                               value="@if(old('first_name')){{old('first_name')}} @elseif(!empty($employee)){{$employee->first_name}} @endif">
+                               value="@if(old('first_name')){{old('first_name')}}@elseif(!empty($employee)){{$employee->first_name}}@endif">
                         @error('first_name')
                         <span style="color: red">{{ $message }}</span>
                         @enderror
@@ -84,7 +89,7 @@
                     <div class="form-group">
                         <label>Last name *</label>
                         <input type="text" class="form-control col-4" name="last_name"
-                               value="@if(old('last_name')){{old('last_name')}} @elseif(!empty($employee)){{$employee->last_name}} @endif">
+                               value="@if(old('last_name')){{old('last_name')}}@elseif(!empty($employee)){{$employee->last_name}}@endif">
                         @error('last_name')
                         <span style="color: red">{{ $message }}</span>
                         @enderror
@@ -92,7 +97,7 @@
                     <div class="form-group">
                         <label>Gmail *</label>
                         <input type="text" class="form-control col-4" name="email"
-                               value="@if(old('email')){{old('email')}} @elseif(!empty($employee)){{$employee->email}} @endif">
+                               value="@if(old('email')){{old('email')}}@elseif(!empty($employee)){{$employee->email}}@endif">
                         @error('email')
                         <span style="color: red">{{ $message }}</span>
                         @enderror
@@ -127,7 +132,7 @@
                     <div class="form-group">
                         <label>Address *</label>
                         <input type="text" class="form-control col-4" name="address"
-                               value="@if(old('address')){{old('address')}} @elseif(!empty($employee)){{$employee->address}} @endif">
+                               value="@if(old('address')){{old('address')}}@elseif(!empty($employee)){{$employee->address}}@endif">
                         @error('address')
                         <span style="color: red">{{ $message }}</span>
                         @enderror

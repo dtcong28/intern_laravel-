@@ -33,7 +33,7 @@
                 <div class="form-group p-3">
                     <label>Name</label>
                     <input type="text" class="form-control col-4" name="name"
-                           value="@if(old('name')){{old('name')}} @elseif(!empty($team)) {{$team->name}}  @endif">
+                           value="@if(old('name')){{old('name')}}@elseif(!empty($team)){{$team->name}}@endif">
                     @error('name')
                     <span style="color: red">{{ $message }}</span>
                     @enderror
